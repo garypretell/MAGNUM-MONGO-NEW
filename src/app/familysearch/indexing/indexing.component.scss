@@ -1,0 +1,33 @@
+.contenedor {
+  max-height: calc(100vh - 180px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.contenedor::-webkit-scrollbar {
+  width: 5px;
+}
+.contenedor::-webkit-scrollbar-thumb {
+  background: #80a53b;
+  border-radius: 5px;
+}
+
+.altura3 {
+  height: calc(100vh - 130px);
+  overflow: hidden;
+  // text-align: center;
+}
+
+
+.content {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  -ms-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  padding: 10px;
+  width: 80%;
+  background-color: #FFF;
+}

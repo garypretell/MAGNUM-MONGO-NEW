@@ -1,0 +1,107 @@
+<ng-container *ngIf="campos as campos">
+    <div style="height: 88vh;">
+        <as-split direction="horizontal">
+            <as-split-area [size]="25">
+                <div class="breadcrumb d-flex justify-content-between align-items-center mx-2">
+                    <ol class="breadcrumb  mb-0 p-0">
+                        <li class="breadcrumb-item text-primary"><a role="button" (click)="goHome()">Inicio</a>
+                        </li>
+                        <li class="breadcrumb-item text-primary"><a role="button" (click)="goList()">Carpetas</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Evaluación</li>
+                    </ol>
+                </div>
+                <div class="contenedor">
+                    <div class="row">
+                        <div class="col">
+                            <div class="shadow card bg-primary text-white text-center m-2">
+                                <h4> {{documento.nombre}}</h4>
+                                <small>
+                                    <cite title="Source Title">*Todos los campos son requeridos</cite>
+                                </small>
+                            </div>
+                            <hr class="mx-5">
+                            <form #formcontrol="ngForm" class="needs-validation m-2" novalidate>
+                                <ng-container *ngFor="let data of campos.campos">
+                                    <div class="form-row" *ngIf="data.estado == true ">
+                                        <ng-container [ngSwitch]="data.tipo">
+                                            <div dragula="DRAGULA_FACTS" class="w-100">
+                                                <ng-container *ngSwitchCase="'numerico'">
+                                                    <div class="col mb-3" style="cursor: pointer;">
+                                                        <label for="apellidos">{{data.nombre}}</label>
+                                                        <input type="number" class="form-control text-uppercase field-focus"
+                                                            name="{{data.id}}" [(ngModel)]="newObject[data.id]"
+                                                            (keyup.enter)="keytab($event)" autofocus required />
+                                                    </div>
+                                                </ng-container>
+                                                <ng-container *ngSwitchCase="'fecha'">
+                                                    <div class="col mb-3" style="cursor: pointer;">
+                                                        <label for="apellidos">{{data.nombre}}</label>
+                                                        <input type="date" placeholder="dd/mm/yyyy"
+                                                            class="form-control text-uppercase field-focus"
+                                                            name="{{data.id}}" [(ngModel)]="newObject[data.id]"
+                                                            (keyup.enter)="keytab($event)" autofocus required />
+                                                    </div>
+                                                </ng-container>
+                                                <ng-container *ngSwitchDefault>
+                                                    <div class="col mb-3" style="cursor: pointer;">
+                                                        <label for="apellidos">{{data.nombre}}</label>
+                                                        <input type="text" class="form-control text-uppercase field-focus"
+                                                            oninput="this.value = this.value.toUpperCase()"
+                                                            name="{{data.id}}" [(ngModel)]="newObject[data.id]"
+                                                            (keyup.enter)="keytab($event)" autofocus required />
+                                                    </div>
+                                                </ng-container>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </ng-container>
+                                <button (click)="add()" class="btn btn-primary btn-lg btn-block"
+                                    [disabled]="!formcontrol.form.valid">Guardar(F12)</button>
+                            </form>
+                            <div class="text-primary text-center">
+                                <small>
+                                    <cite title="Source Title">*Todos los campos son requeridos</cite>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </as-split-area>
+            <as-split-area [size]="75">
+                <ng-container>
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <div class="btn-group btn-group-sm btn-block" role="group" aria-label="Button group with nested dropdown">
+                          <button type="button" class="btn btn-secondary">Tapa Inicio(F2)</button>
+                          <button type="button" class="btn btn-secondary">Acta Apertura(F3)</button>
+                          <button type="button" class="btn btn-secondary">Adjunto(F4)</button>
+                          <button type="button" class="btn btn-secondary">Doc. Ilegible(F5)</button>
+                          <button type="button" class="btn btn-secondary">Doc. Vacio(F6)</button>
+                          <button type="button" class="btn btn-secondary">Acta de Cierre(F7)</button>
+                          <button type="button" class="btn btn-secondary">Tapa Fin(F8)</button>
+                        </div>
+                  </div>
+                        <div class="altura3 border border-info">
+                            <img  (mousedown)="$event.preventDefault()" style='height: 100%; width: 100%; object-fit: contain' id="scene" #scene>
+                        </div>
+                </ng-container>
+            </as-split-area>
+        </as-split>
+    </div>
+</ng-container>
+<ng-template #loading>
+    <div class="d-flex justify-content-center mt-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <strong class="text-primary"> Loading... </strong>
+    </div>
+</ng-template>
+<ng-template #mensaje2>
+    <div class="col-md-12">
+        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+            <strong>Mensaje!</strong> No existen imágenes para la indexación.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+</ng-template>

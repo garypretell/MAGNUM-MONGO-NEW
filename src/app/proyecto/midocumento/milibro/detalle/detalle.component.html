@@ -1,0 +1,203 @@
+<div class="breadcrumb d-flex justify-content-between align-items-center">
+    <ol class="breadcrumb mb-0 p-0">
+        <li class="breadcrumb-item text-primary">
+            <a role="button" (click)="goHome()">Inicio</a>
+        </li>
+        <li class="breadcrumb-item text-primary">
+            <a role="button" (click)="goDocumento()">Documentos</a>
+        </li>
+        <li class="breadcrumb-item text-primary">
+            <a role="button" (click)="goLibro()">Libro</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">{{ numBook }}</li>
+    </ol>
+    <button class="btn btn-sm btn-success">
+        <strong>{{ documento?.nombre }}</strong>
+    </button>
+</div>
+<ng-container *ngIf="fields as campos; else mensaje">
+    <div class="mt-2" style="width: 100%; height: 78vh;">
+        <as-split direction="horizontal">
+            <as-split-area size="20" class="contenedor">
+                <div class="row">
+                    <div class="col">
+                        <div class="shadow card bg-primary text-white text-center m-2">
+                            <h4> {{documento?.nombre}}</h4>
+                            <small>
+                                <cite title="Source Title">*Todos los campos son requeridos</cite>
+                            </small>
+                        </div>
+                        <hr class="mx-5">
+                        <form #formcontrol="ngForm" class="needs-validation m-2" novalidate>
+                            <ng-container *ngFor="let data of campos.campos">
+                                <div class="form-row" *ngIf="data.estado == true ">
+                                    <ng-container [ngSwitch]="data.tipo">
+                                        <div dragula="DRAGULA_FACTS" class="w-100">
+                                            <ng-container *ngSwitchCase="'numerico'">
+                                                <div class="col mb-3" style="cursor: pointer;">
+                                                    <label for="apellidos">{{data.nombre}}</label>
+                                                    <input type="number" class="form-control text-uppercase field-focus"
+                                                        name="{{data.id}}" [(ngModel)]="newObject[data.id]"
+                                                        (keyup.enter)="keytab($event)" autofocus required />
+                                                </div>
+                                            </ng-container>
+                                            <ng-container *ngSwitchCase="'fecha'">
+                                                <div class="col mb-3" style="cursor: pointer;">
+                                                    <label for="apellidos">{{data.nombre}}</label>
+                                                    <input type="date" placeholder="dd/mm/yyyy"
+                                                        class="form-control text-uppercase field-focus"
+                                                        name="{{data.id}}" [(ngModel)]="newObject[data.id]"
+                                                        (keyup.enter)="keytab($event)" autofocus required />
+                                                </div>
+                                            </ng-container>
+                                            <ng-container *ngSwitchDefault>
+                                                <div class="col mb-3" style="cursor: pointer;">
+                                                    <label for="apellidos">{{data.nombre}}</label>
+                                                    <input type="text" class="form-control text-uppercase field-focus"
+                                                        oninput="this.value = this.value.toUpperCase()"
+                                                        name="{{data.id}}" [(ngModel)]="newObject[data.id]"
+                                                        (keyup.enter)="keytab($event)" autofocus required />
+                                                </div>
+                                            </ng-container>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+                            <button (click)="add(newObject)" class="btn btn-primary btn-lg btn-block"
+                                [disabled]="!formcontrol.form.valid">Guardar</button>
+                        </form>
+                        <div class="text-primary text-center mt-0">
+                            <small>
+                                <cite title="Source Title">*Todos los campos son requeridos</cite>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </as-split-area>
+            <as-split-area size="80" >
+                <div class="m-2">
+                    <div class="shadow alert alert-warning alert-dismissible fade show" role="alert">
+                        <strong>Importante!</strong> Actualmente se muestran los últimos 6 registros(por usuario). <br>
+                        Si desea ver el <strong>listado completo</strong> de este libro, haga click en: <span
+                            (click)="goListado()" role="button" class="badge badge-success">
+                            Libro {{numBook}} <i class="fa fa-book" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover mt-3 text-center">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <ng-container *ngFor="let column of campos.campos  | filterBy: userFilterV">
+                                        <th scope="col" *ngIf="column.estado !== 'principal' ">
+                                            {{column.nombre | uppercase}}
+                                        </th>
+                                    </ng-container>
+                                    <th scope="col">ACCIONES</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of records; let i = index">
+                                    <td>{{ i+1}} </td>
+                                    <ng-container *ngFor="let col of campos.campos | filterBy: userFilterV">
+                                        <td *ngIf="col.estado !== 'principal' ">{{item[col.id] }}
+                                        </td>
+                                    </ng-container>
+                                    <td>
+                                        <button class="btn btn-outline-primary btn-sm m-1"
+                                            (click)="enableEditing($event, item)">
+                                            <i class="fa fa-pencil"></i> Editar</button>
+                                        <button class="btn btn-outline-danger btn-sm m-1" (click)="deleteRegistro(item)">
+                                            <i class="fa fa-trash"></i> Eliminar</button>
+                                    </td>
+                                  </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </as-split-area>
+        </as-split>
+    </div>
+</ng-container>
+<ng-template #loading>
+    <div class="d-flex justify-content-center mt-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <strong class="text-primary"> Loading... </strong>
+    </div>
+</ng-template>
+
+<ng-template #mensaje>
+    <div class="col-md-12">
+        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+            <strong>Mensaje!</strong> Es necesario crear una plantilla antes de iniciar.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #mensaje2>
+    <div class="col-md-12">
+        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+            <strong>Mensaje!</strong> No existen imágenes para la indexación.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+</ng-template>
+
+<div #myModalEditS class="modal fade" id="myModalEditS" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document" *ngIf="fields; let temporal;">
+        <div class="modal-content">
+            <form class="form" (ngSubmit)="updateRegistroS(registrotoEdit)">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Editar Registros</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form">
+                        <div *ngFor="let col of temporal.campos| filterBy: userFilterF">
+                            <div class="form-group" *ngIf="col.estado !== 'principal' ">
+                                <label class="col-xs-4 control-label">
+                                    <strong>{{col.nombre}}</strong>
+                                </label>
+                                <div class="col-xs-8">
+                                    <div [ngSwitch]="col.tipo">
+                                        <div *ngSwitchCase="'numerico'">
+                                            <input type="number" class="form-control" [(ngModel)]="editObject[col.id]"
+                                                [ngModelOptions]="{standalone: true}" />
+                                        </div>
+                                        <div *ngSwitchCase="'fecha'">
+                                            <input type="date" placeholder="dd/mm/yyyy"
+                                                class="form-control text-uppercase" [(ngModel)]="editObject[col.id]"
+                                                [ngModelOptions]="{standalone: true}" />
+                                        </div>
+                                        <div *ngSwitchCase="'imagen'">
+                                            <input type="file" class="form-control" [(ngModel)]="editObject[col.id]"
+                                                [ngModelOptions]="{standalone: true}">
+                                        </div>
+                                        <div *ngSwitchDefault>
+                                            <input type="text" enter class="form-control"
+                                                oninput="this.value = this.value.toUpperCase()"
+                                                [ngModelOptions]="{standalone: true}"
+                                                [(ngModel)]="editObject[col.id]" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit">Actualizar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,8 @@
+.inicio{
+    height: calc(100vh - 100px);
+}
+
+.contenedor {
+    max-height: calc(100vh - 258px);
+    overflow-y: auto;
+  }

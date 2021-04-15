@@ -1,0 +1,25 @@
+// .altura{
+//     height: calc(100vh - 120px);
+//     overflow-y: auto;
+// }
+
+.contenedor {
+    max-height: calc(100vh - 180px);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  
+  .contenedor::-webkit-scrollbar {
+    width: 5px;
+  }
+  .contenedor::-webkit-scrollbar-thumb {
+    background: #80a53b;
+    border-radius: 5px;
+  }
+  
+  .altura3 {
+    height: calc(100vh - 130px);
+    overflow: hidden;
+    // text-align: center;
+  }
+  

@@ -1,0 +1,48 @@
+<div class="container-fluid mt-3" *ngIf="user as user; else loading">
+    <div class="row">
+        <div class="col-md-4 mb-2">
+            <div class="shadow card mb-4">
+
+                <div class="card-body ">
+                    <h4 class="mt-2">Bienvenido(a): {{user.nickname}}</h4>
+                    <p class="text-muted">Si deseas actualizar tu contraseña, rellena este formulario. <br> </p>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-8 mb-5 bg-light">
+            <div class="card my-2">
+                <form class="card-body" [formGroup]="updateForm" (ngSubmit)="updatePassword()" >
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail4">Correo</label>
+                            <input type="email" class="form-control" id="inputEmail4" placeholder="Correo" [(ngModel)]="userObject.email" [ngModelOptions]="{standalone: true}" readonly>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputPassword4">Contraseña</label>
+                            <input type="password" class="form-control" id="inputPassword4" placeholder="Contraseña" formControlName="pass">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label for="inputAddress">Nueva Contraseña</label>
+                        <input type="password" class="form-control" id="inputAddress" placeholder="Nueva Contraseña" formControlName="new_pass">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputAddress2">Repita Contraseña</label>
+                        <input type="password" class="form-control" id="inputAddress2" formControlName="repeat_pass"
+                            placeholder="Repita Contraseña">
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3" [disabled]="!updateForm.valid">Actualizar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #loading>
+    <div class="d-flex justify-content-center mt-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <strong class="text-primary"> Loading... </strong>
+    </div>
+</ng-template>

@@ -1,0 +1,124 @@
+<section>
+    <div class="container-fluid mt-2">
+        <div class="row">
+            <div class="col-3">
+                <p class="text-muted small mt-3">
+                    <strong>MAGNUM </strong>Listado de Documentos creados para este Proyecto.
+                  </p>
+                  <p class="text-muted small mt-0">
+                   Agrega documentos a tu Proyecto para iniciar con la indexación.
+                  </p>
+            </div>
+            <div class="col-9 bg-light shadow-sm altura">
+                <div class="d-flex w-100 justify-content-between mt-2 mb-3">
+                    <div>
+                        <h5><strong>LISTADO DE DOCUMENTOS</strong>({{proyecto?.nombre}})</h5>
+                    </div>
+                    <div><span role="button" class="badge badge-primary" (click)="addModal()" *ngIf="auth.canDelete(auth.user$ | async)">Nuevo</span></div>
+                </div>
+                <ng-container *ngIf="documentos; else loading">
+                    <ng-container *ngIf="documentos.length > 0; else mensajeProyecto">
+                        <div class="alert alert-warning alert-dismissible fade show shadow-sm mt-1" role="alert">
+                            <strong>Mensaje!</strong> Listado de todos los documentos creados.
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <table class="table text-center">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th class="text-left">Nombre</th>
+                                    <th class="text-left" scope="col">Fecha de Creación</th>
+                                    <th scope="col" *ngIf="auth.canDelete(auth.user$ | async)">Plantilla</th>
+                                    <th scope="col">Libros</th>
+                                    <th scope="col">Buscar</th>
+                                    <th scope="col" *ngIf="auth.canDelete(auth.user$ | async)">Eliminar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    *ngFor="let item of documentos | paginate: { itemsPerPage: 7, currentPage: p }; let i = index">
+                                    <td>{{ 7 * (p -1) + i + 1}} </td>
+                                    <!-- <td class="text-left">
+                                            {{item._id }}
+                                        </td> -->
+                                    <td class="text-left">
+                                        <strong>{{item.nombre }}</strong>
+                                    </td>
+                                    <td class="text-left">{{item.createdAt | date:'medium'}}</td>
+                                    <td *ngIf="auth.canDelete(auth.user$ | async)">
+                                        <span role="button" class="badge badge-primary"
+                                            (click)="goPlantilla(item)" >PLANTILLA</span>
+                                    </td>
+                                    <td><span role="button" class="badge badge-success"
+                                        (click)="goLibro(item)">Libros</span></td>
+                                        <td><span role="button" class="badge badge-info"
+                                            (click)="buscarDocumento(item)">Buscar</span></td>
+                                    <td *ngIf="auth.canDelete(auth.user$ | async)"><span role="button" class="badge badge-danger"
+                                            (click)="deleteDocumento(item)">Eliminar</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <hr *ngIf="documentos.length > 7">
+                        <div class="text-right">
+                            <pagination-controls (pageChange)="p = $event" *ngIf="documentos.length > 7">
+                            </pagination-controls>
+                        </div>
+                    </ng-container>
+                </ng-container>
+                <ng-template #loading>
+                    <div class="d-flex justify-content-center mt-5">
+                        <div class="spinner-border text-info" role="status">
+                        </div>
+                        <strong class="text-info"> Loading... </strong>
+                    </div>
+                </ng-template>
+                <ng-template #mensajeProyecto>
+                    <div class="shadow alert alert-info alert-dismissible fade show" role="alert">
+                        <strong>Mensaje!</strong> Actualmente no existen documentos creados en este Proyecto.
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </ng-template>
+                <ng-template #noElement>
+                    <div class="alert alert-info" role="alert">
+                        No items found!
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div #myModal class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form class="form" [formGroup]="addDocumentoForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Nuevo Documento</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <label for="nombre1">Nombre del Documento:</label>
+                            <input #inputEl type="text" class="form-control text-uppercase" id="nombre1" name="nombre1"
+                                formControlName="nombre" oninput="this.value = this.value.toUpperCase()">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button class="btn btn-primary" (click)="addDocumento()"
+                        [disabled]="!addDocumentoForm.valid">Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

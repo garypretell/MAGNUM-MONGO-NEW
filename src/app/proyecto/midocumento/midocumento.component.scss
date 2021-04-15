@@ -1,0 +1,10 @@
+.section {
+    padding: 100px 0;
+    height: 100%;
+    width: auto;
+  }
+  
+  .altura {
+    height: calc(100vh - 100px);
+    overflow-y: auto;
+  }

@@ -1,0 +1,38 @@
+<div class="breadcrumb d-flex justify-content-between align-items-center">
+    <ol class="breadcrumb mb-0 p-0">
+      <li class="breadcrumb-item text-primary">
+        <a role="button" (click)="goHome()">Inicio</a>
+      </li>
+      <li class="breadcrumb-item text-primary">
+        <a role="button" (click)="goDocumentos()">Documentos</a>
+      </li>
+      <li class="breadcrumb-item text-primary">
+        <a role="button" (click)="goLibros()">Libros</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">LISTADO</li>
+    </ol>
+    <button class="btn btn-sm btn-success">
+      <strong>{{documento.nombre}}</strong>
+    </button>
+  </div>
+<div class="row">
+    <div class="col-12">
+        <div class="row row-cols-1 row-cols-sm-4">
+            <ng-container *ngFor="let libro of topList">
+                <div class="col">
+                    <a role="button" class="shadow card2 text-center">
+                        <h3>Libro : {{libro.numLibro}}</h3>
+                        <hr>
+                        <button class="btn btn-outline-dark btn-sm m-2" (click)="goRegistrar(libro)">Registrar</button>
+                        <button class="btn btn-outline-secondary btn-sm" (click)="goListado(libro)">Registros</button><br>
+                        <div class="go-corner" href="#">
+                            <div class="go-arrow">
+                                →
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

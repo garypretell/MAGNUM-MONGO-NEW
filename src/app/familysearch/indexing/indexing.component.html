@@ -1,0 +1,231 @@
+<ng-container *ngIf="!mostrar; else cargarImagenes">
+    <div class="row">
+        <div class="col-3">
+            <ngx-treeview [config]="config" [items]="itemsList2" (filterChange)="onFilterChange($event)"
+                (selectedChange)="onSelectedChange($event)">
+            </ngx-treeview>
+        </div>
+        <div class="col-9">
+            <div class="breadcrumb d-flex justify-content-between align-items-center">
+                <ol class="breadcrumb  mb-0 p-0">
+                    <li class="breadcrumb-item text-primary"><a role="button" (click)="goHome()">Inicio</a></li>
+                    <li class="breadcrumb-item text-primary"><a role="button" (click)="goList()">Listado</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Imagenes</li>
+                </ol>
+            </div>
+            <div class="bg-light">
+                <div class="row m-2">
+                    <div class="col-12 ">
+                        <h2 class="display-4">Images!</h2>
+                        <p class="lead">En esta sección podrás observar todos los imágenes pertenecientes al libro seleccionado...</p>
+                        <p>
+                           Selecciona un tipo de documento para empezar a indexar.</p>
+                        <hr class="my-4">
+                        <div style="text-align:center;margin:0; padding:0;">
+                            <ng-image-slider #nav [images]="imageObject" [infinite]="true" [autoSlide]="1"
+                                [imageSize]="{width: '25%', height: 200}" slideImage="1"></ng-image-slider>
+                        </div>
+                    </div>
+                </div>
+                <hr class="mx-4">
+                <div class="row m-2">
+                    <div class="col-12">
+                        <form class="form" [formGroup]="addImagesForm">
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <ng-container *ngIf="documentos as documents">
+                                        <label for="nombre">Documento:</label>
+                                        <select class="custom-select mr-sm-2" formControlName="document"
+                                            id="inlineFormCustomSelect">
+                                            <option selected disabled value="">Selecciona Documento...</option>
+                                            <option [ngValue]="d.name" *ngFor="let d of documents">
+                                                {{ d.nombre }}
+                                            </option>
+                                        </select>
+                                    </ng-container>
+                                </div>
+                                <div class="col">
+                                    <label for="nombre">Libro:</label>
+                                    <input type="number" class="form-control" id="numLibro" name="numLibro"
+                                        placeholder="Número de Libro" formControlName="numLibro">
+                                </div>
+                                <div class="col">
+                                    <!-- <label for="nombre">Ubicación:</label> -->
+                                    <!-- <input type="number" class="form-control" id="numLibro" name="numLibro"
+                                        placeholder="Número de Libro" formControlName="numLibro"> -->
+                                    <textarea class="form-control text-uppercase mt-2" id="ubicacion" name="ubicacion" formControlName="ubicacion" rows="2" placeholder="Ubicación física del documento"></textarea>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-primary btn-lg btn-block mt-3 mb-5"
+                                (click)="addImages()" [disabled]="!addImagesForm.valid">SIGUIENTE</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+<ng-template #cargarImagenes>
+    <ng-container *ngIf="valueList.length < 1; else indexar">
+        <div class="content">
+            <div class="shadow jumbotron text-center mt-4">
+                <h1 class="display-4">INDEXAR CARPETA</h1>
+                <p class="lead">Los datos se agregaron correctamente.</p>
+                <hr class="my-4">
+                <p class="text-muted">Para inciar con la indexación de documentos, haga click en:</p>
+                <button class="btn btn-primary btn-lg" (click)="goImages()">INDEXAR</button>
+            </div>
+          </div>
+    </ng-container>
+
+</ng-template>
+
+<ng-template #indexar>
+    <ng-container *ngIf="campos as campos; else loading">
+        <ng-container *ngIf="campos.campos.length > 0; else advice">
+            <div style="height: 88vh;">
+                <as-split direction="horizontal">
+                    <as-split-area [size]="25">
+                        <div class="breadcrumb d-flex justify-content-between align-items-center mx-2">
+                            <ol class="breadcrumb  mb-0 p-0">
+                                <li class="breadcrumb-item text-primary"><a role="button" (click)="goHome()">Inicio</a>
+                                </li>
+                                <li class="breadcrumb-item text-primary"><a role="button" (click)="goList()">Carpetas</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Indexar</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="contenedor">
+                            <div class="row">
+                                <div class="col">
+                                    
+                                    <div class="custom-control custom-switch m-2">
+                                        <input type="checkbox" class="custom-control-input" id="customSwitch1"
+                                            [(ngModel)]="checkBoxValue" [ngModelOptions]="{ standalone: true }">
+                                        <label class="custom-control-label" for="customSwitch1">Registro Múltiple</label>
+                                    </div>
+                                    
+                                    <hr class="mx-3">
+                                    <div class="m-2" *ngIf="checkBoxValue">
+                                        <button (click)="nextImage()"
+                                            class="btn btn-outline-primary btn-lg btn-block">Nueva Imagen</button>
+                                    </div>
+                                    
+                                    <div class="shadow card bg-primary text-white text-center m-2">
+                                        <h4> {{documento.nombre}}</h4>
+                                        <small>
+                                            <cite title="Source Title">*Todos los campos son requeridos</cite>
+                                        </small>
+                                    </div>
+                                    <hr class="mx-5">
+                                    <form #formcontrol="ngForm" class="needs-validation m-2" novalidate>
+                                        <ng-container *ngFor="let data of campos.campos">
+                                            <div class="form-row" *ngIf="data.estado == true ">
+                                                <ng-container [ngSwitch]="data.tipo">
+                                                    <div dragula="DRAGULA_FACTS" class="w-100">
+                                                        <ng-container *ngSwitchCase="'numerico'">
+                                                            <div class="col mb-3" style="cursor: pointer;">
+                                                                <label for="apellidos">{{data.nombre}}</label>
+                                                                <input type="number"
+                                                                    class="form-control text-uppercase field-focus"
+                                                                    name="{{data.id}}" [(ngModel)]="newObject[data.id]"
+                                                                    (keyup.enter)="keytab($event)" autofocus required />
+                                                            </div>
+                                                        </ng-container>
+                                                        <ng-container *ngSwitchCase="'fecha'">
+                                                            <div class="col mb-3" style="cursor: pointer;">
+                                                                <label for="apellidos">{{data.nombre}}</label>
+                                                                <input type="date" placeholder="dd/mm/yyyy"
+                                                                    class="form-control text-uppercase field-focus"
+                                                                    name="{{data.id}}" [(ngModel)]="newObject[data.id]"
+                                                                    (keyup.enter)="keytab($event)" autofocus required />
+                                                            </div>
+                                                        </ng-container>
+                                                        <ng-container *ngSwitchDefault>
+                                                            <div class="col mb-3" style="cursor: pointer;">
+                                                                <label for="apellidos">{{data.nombre}}</label>
+                                                                <input type="text"
+                                                                    class="form-control text-uppercase field-focus"
+                                                                    oninput="this.value = this.value.toUpperCase()"
+                                                                    name="{{data.id}}" [(ngModel)]="newObject[data.id]"
+                                                                    (keyup.enter)="keytab($event)" autofocus required />
+                                                            </div>
+                                                        </ng-container>
+                                                    </div>
+                                                </ng-container>
+                                            </div>
+                                        </ng-container>
+                                        <button (click)="add(newObject)" class="btn btn-primary btn-lg btn-block"
+                                            [disabled]="!formcontrol.form.valid">Guardar</button>
+                                    </form>
+                                    <div class="text-primary text-center">
+                                        <small>
+                                            <cite title="Source Title">*Todos los campos son requeridos</cite>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </as-split-area>
+                    <as-split-area [size]="75">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <div class="btn-group btn-group-sm btn-block" role="group" aria-label="Button group with nested dropdown">
+                              <button type="button" class="btn btn-secondary">Tapa Inicio(F2)</button>
+                              <button type="button" class="btn btn-secondary">Acta Apertura(F3)</button>
+                              <button type="button" class="btn btn-secondary">Adjunto(F4)</button>
+                              <button type="button" class="btn btn-secondary">Doc. Ilegible(F5)</button>
+                              <button type="button" class="btn btn-secondary">Doc. Vacio(F6)</button>
+                              <button type="button" class="btn btn-secondary">Acta de Cierre(F7)</button>
+                              <button type="button" class="btn btn-secondary">Tapa Fin(F8)</button>
+                              <!-- <div class="btn-group" role="group">
+                                <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Página
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                  <a class="dropdown-item" href="#">Carátula(F4)</a>
+                                  <a class="dropdown-item" href="#">Acta de Apertura(F5)</a>
+                                  <a class="dropdown-item" href="#">Hoja en Blanco(F6)</a>
+                                  <a class="dropdown-item" href="#">Acta de Cierre(F7)</a>
+                                </div>
+                              </div> -->
+                            </div>
+                      </div>
+                        <div class="altura3 border border-info">
+                            <img id="scene" name="scene" #scene (mousedown)="$event.preventDefault()"
+                                style='height: 100%; width: 100%; object-fit: contain'>
+                        </div>
+
+                    </as-split-area>
+                </as-split>
+            </div>
+        </ng-container>
+    </ng-container>
+</ng-template>
+
+<ng-template #loading>
+    <div class="d-flex justify-content-center mt-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <strong class="text-primary"> Loading... </strong>
+    </div>
+</ng-template>
+<ng-template #mensaje2>
+    <div class="col-md-12">
+        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+            <strong>Message!</strong> There are no images for indexing.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+</ng-template>
+<ng-template #advice>
+    <div class="col-md-12">
+        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+            <strong>Message!</strong> You need to create a template for this document.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+</ng-template>
