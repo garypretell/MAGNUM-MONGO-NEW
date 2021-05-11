@@ -24,7 +24,7 @@ export class DocumentoComponent implements OnInit, OnDestroy {
   @ViewChild("inputEl") inputEl: ElementRef;
   @ViewChild("myModal") myModal: ElementRef;
   public addDocumentoForm: FormGroup;
-  p =1;
+  p = 1;
   user: any;
   proyecto: any;
   documentos: any;
@@ -78,9 +78,10 @@ export class DocumentoComponent implements OnInit, OnDestroy {
       value: 0,
       createdAt: Date.now(),
     };
-    const findDocumento = await this.documentoService.findDocumento(
-      documento.codigo
-    );
+    const findDocumento = await this.documentoService.searchDocumento({
+      codigo: documento.codigo,
+      proyecto: this.proyId.toString(),
+    });
     if (findDocumento) {
       Swal.fire({
         icon: "error",
@@ -97,23 +98,19 @@ export class DocumentoComponent implements OnInit, OnDestroy {
 
   deleteDocumento(documento) {
     Swal.fire({
-      title: 'Esta seguro de eliminar este documento?',
-      text: 'No podrás revertir este proceso!',
-      icon: 'warning',
+      title: "Esta seguro de eliminar este documento?",
+      text: "No podrás revertir este proceso!",
+      icon: "warning",
       showCancelButton: true,
-      cancelButtonText: 'Cancel',
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, Eliminar!'
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, Eliminar!",
     }).then(async (result) => {
       if (result.value) {
         await this.documentoService.deleteDocumento(documento._id);
         this.updateList();
-        Swal.fire(
-          'Eliminado!',
-          'El documento ha sio eliminado.',
-          'success'
-        );
+        Swal.fire("Eliminado!", "El documento ha sio eliminado.", "success");
       }
     });
   }
@@ -125,6 +122,10 @@ export class DocumentoComponent implements OnInit, OnDestroy {
   }
 
   goPlantilla(p): any {
-    this.router.navigate(["/proyecto", this.proyId.toString(), p._id.toString()]);
+    this.router.navigate([
+      "/proyecto",
+      this.proyId.toString(),
+      p._id.toString(),
+    ]);
   }
 }

@@ -1,8 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ReplaySubject } from "rxjs";
 const { MongoClient } = require("mongodb");
-// const uri =
-//   "mongodb+srv://garypretell:qwerty24.24@cluster0.qephl.mongodb.net/gpsoft";
 const uri = "mongodb://localhost:27017";
 @Injectable({
   providedIn: "root",

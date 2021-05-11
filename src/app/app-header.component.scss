@@ -1,1 +1,30 @@
-.more { cursor: pointer; }
+.more {
+  cursor: pointer;
+}
+.progress {
+  height: 15px; /* needs to be an absolute measurement unless one of it's parent has an absolute height */
+}
+
+.altura {
+  height: calc(100vh - 310px);
+  overflow-y: auto;
+}
+
+.altura2 {
+  height: calc(100vh - 340px);
+  overflow-y: auto;
+}
+
+.content {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  -ms-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  padding: 10px;
+  width: 80%;
+  background-color: #FFF;
+}
+

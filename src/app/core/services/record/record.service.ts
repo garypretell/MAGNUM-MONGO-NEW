@@ -223,6 +223,23 @@ export class RecordService {
     }
   }
 
+  async updateRecordManage(obj, newData) {
+    const client = new MongoClient(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    try {
+      await client.connect();
+      const database = client.db("sindex");
+      const collection = database.collection("records", {
+        returnNonCachedInstance: true,
+      });
+      await collection.updateOne(obj, { $set: newData });
+    } finally {
+      await client.close();
+    }
+  }
+
   async getChartUser(usuarioid) {
     const client = new MongoClient(uri, {
       useNewUrlParser: true,

@@ -178,6 +178,9 @@ export class FamilysearchComponent implements OnInit, OnDestroy {
           contador: 0,
           uid: this.user.uid,
           proyectoid: this.proyId.toString(),
+          upload: false,
+          percent: 0,
+          complete: false
         };
         await this.folderService.createFolder(data);
         this.statusList = await this.folderService.findCarpeta({
@@ -251,7 +254,7 @@ export class FamilysearchComponent implements OnInit, OnDestroy {
           idFolder: item._id,
           proyectoid: this.proyId.toString(),
         });
-        let lst = tempTemp.campos.filter((f: any) => f.estado !== "principal");
+        var lst = tempTemp.campos.filter((f: any) => f.estado !== "principal");
         var sortedObjs = _.sortBy(tempRecord, lst[0].id);
         var html =
           "<table class='noborder'><tr><td valign = 'middle=' ><big><big ><big>" +
@@ -307,6 +310,8 @@ export class FamilysearchComponent implements OnInit, OnDestroy {
         });
         html += "</tbody></table><br/> ";
         html += "</body></html>";
+        // await this.exportData(item);
+        // await this.folderService.updateFolder(item._id, {complete: true});
         fs.writeFile(
           `M:/Reportes/${item.document}_${name}_${item._id}.html`,
           html,
@@ -366,5 +371,26 @@ export class FamilysearchComponent implements OnInit, OnDestroy {
       status: e.target.value,
       proyectoid: this.proyId.toString(),
     });
+  }
+
+  async exportData(p): Promise<any> {
+
+    try {
+      const exec = require("child_process").exec;
+      const command = `mongoexport --host localhost --port 27017 --db sindex -c records --query "{\\"libro\\": \\"${p._id.toString()}\\"}" --type json --out M://Reportes/${p._id.toString()}.json`;
+      exec(command, (err) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        Swal.fire({
+          icon: "success",
+          title: "Completado!",
+          text: "Los archivos han sido creados!",
+        });
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

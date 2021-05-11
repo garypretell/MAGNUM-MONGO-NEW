@@ -24,6 +24,7 @@ import { DocumentService } from "../../core/services/document/document.service";
 import { RecordService } from "../../core/services/record/record.service";
 import { TemplateService } from "../../core/services/template/template.service";
 import { ImageService } from "../../core/services/images/images.service";
+import { SpeechRecognitionService } from '../../core/services/speech/speech-recognition.service';
 var ObjectID = require("mongodb").ObjectID;
 import * as $ from "jquery";
 import { ProyectoService } from "../../core/services/proyecto/proyecto.service";
@@ -93,6 +94,7 @@ export class IndexingComponent implements OnInit, OnDestroy, AfterViewInit {
     public bookService: BookService,
     private renderer: Renderer2,
     private _location: Location
+
   ) {
     this.addImagesForm = this.formBuilder.group({
       document: ["", [Validators.required]],
@@ -299,7 +301,7 @@ export class IndexingComponent implements OnInit, OnDestroy, AfterViewInit {
     await this.bookService
       .createBook(libro)
       .then(() => {
-        this.downlineItems.forEach((downlineItem: any) => {
+        this.downlineItems.map((downlineItem: any) => {
           const item = downlineItem.item;
           const data: any = {
             idFolder: this.idFolder.toString(),
@@ -310,6 +312,7 @@ export class IndexingComponent implements OnInit, OnDestroy, AfterViewInit {
             status: 0,
             document: this.addImagesForm.value.document,
             ubicacion: this.addImagesForm.value.ubicacion,
+            drive: null
           };
           this.imageService.createImage(data);
         });
@@ -323,8 +326,6 @@ export class IndexingComponent implements OnInit, OnDestroy, AfterViewInit {
         });
         return;
       });
-
-    // this.addImagesForm.reset();
   }
 
   async goImages() {
@@ -408,6 +409,7 @@ export class IndexingComponent implements OnInit, OnDestroy, AfterViewInit {
     registro.usuarioid = this.user.uid;
     registro.documento = this.documento.name;
     registro.estado = 12;
+    registro.drive = null;
     await this.recordService.createRecord(registro);
     this.newObject = {};
     registro = null;

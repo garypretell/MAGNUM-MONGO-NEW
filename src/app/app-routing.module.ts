@@ -10,6 +10,14 @@ const routes: Routes = [
     canActivate: [RequireUnauthGuard]
   },
   {
+    path: 'configuracion',
+    loadChildren: './configuracion/configuracion.module#ConfiguracionModule'
+  },
+  {
+    path: 'nube',
+    loadChildren: './nube/nube.module#NubeModule'
+  },
+  {
     path: 'detail',
     loadChildren: './detail/detail.module#DetailModule'
   },

@@ -6,6 +6,7 @@ import { UserService } from "../core/services/user/user.service";
 import { DragulaService } from "ng2-dragula";
 import Swal from "sweetalert2";
 import { Subscription } from "rxjs";
+import { ElectronService } from "../core/services";
 declare var jQuery: any;
 declare const $;
 @Component({
@@ -34,7 +35,8 @@ export class ProyectoComponent implements OnInit {
     public proyectoService: ProyectoService,
     public userService: UserService,
     public router: Router,
-    private dragulaService: DragulaService
+    private dragulaService: DragulaService,
+    private electronService: ElectronService,
   ) {
     this.subs.add(
       dragulaService.dropModel(this.MANY_ITEMS).subscribe(async (args) => {

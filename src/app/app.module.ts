@@ -19,9 +19,9 @@ import { NgxSpinnerModule } from "ngx-spinner";
 import { DragScrollModule } from 'ngx-drag-scroll';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { NgImageSliderModule } from 'ng-image-slider';
+import {ProgressBarModule} from "angular-progress-bar";
+import {NgSimpleProgressBarModule} from 'ng-simple-progress-bar';
 import { OrderDownlineTreeviewEventParser, TreeviewConfig, TreeviewEventParser, TreeviewModule } from 'ngx-treeview';
-
-
 
 @NgModule({
   declarations: [AppComponent, AppHeaderComponent],
@@ -44,6 +44,7 @@ import { OrderDownlineTreeviewEventParser, TreeviewConfig, TreeviewEventParser, 
     ImageCropperModule,
     DragulaModule.forRoot(),
     AngularSplitModule,
+    ProgressBarModule,
     TreeviewModule.forRoot()
 
   ],

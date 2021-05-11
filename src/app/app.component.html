@@ -1,7 +1,8 @@
 <div class="container-fluid">
-  <ng-container *ngIf="auth.user$ | async">
+  <ng-container *ngIf="auth.user$ | async; else inicio">
     <app-header></app-header>
   </ng-container>
-  <router-outlet></router-outlet>
+  <ng-template #inicio>
+    <router-outlet></router-outlet>
+  </ng-template>
 </div>
-

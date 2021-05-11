@@ -86,7 +86,7 @@ export class FolderService {
     finally {
       await client.close();
     }
-  }
+  };
 
   findFolderbyId = async(_id) => {
     const client = new MongoClient(uri, {
@@ -102,7 +102,7 @@ export class FolderService {
     } finally {
       await client.close();
     }
-  }
+  };
 
   deleteFolder = async(_id) => {
     const client = new MongoClient(uri, {
@@ -118,7 +118,7 @@ export class FolderService {
     finally {
       await client.close();
     }
-  }
+  };
 
   updateFolder = async(_id, newData) => {
     const client = new MongoClient(uri, {
@@ -134,6 +134,6 @@ export class FolderService {
     finally {
       await client.close();
     }
-  }
+  };
 
 }

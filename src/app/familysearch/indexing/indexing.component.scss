@@ -1,8 +1,9 @@
 .contenedor {
-  max-height: calc(100vh - 180px);
-  overflow-y: auto;
+  height: calc(100vh - 250px);
+  overflow-y: hidden;
   overflow-x: hidden;
 }
+
 
 .contenedor::-webkit-scrollbar {
   width: 5px;
@@ -13,7 +14,7 @@
 }
 
 .altura3 {
-  height: calc(100vh - 130px);
+  height: calc(100vh - 180px);
   overflow: hidden;
   // text-align: center;
 }

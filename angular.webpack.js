@@ -29,5 +29,8 @@ module.exports = {
     node: {
         fs: "empty"
      },
-    target:'electron-renderer'
+    target:'electron-renderer',
+    externals: {
+        googleapis: "commonjs googleapis"
+    }
 }

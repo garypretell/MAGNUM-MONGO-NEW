@@ -33,7 +33,7 @@ export class DetailComponent implements OnInit {
     public route: ActivatedRoute,
     public userService: UserService
   ) {
-    this.view = [innerWidth / 1.4, innerHeight / 2.15];
+    this.view = [innerWidth / 1.4, innerHeight / 2.70];
   }
 
   async ngOnInit() {
@@ -86,6 +86,11 @@ export class DetailComponent implements OnInit {
   goDocumento(): any {
     this.router.navigate(["/proyecto",  this.miproyecto._id.toString(), "midocumento"]);
     // return this.router.navigate(["document"]);
+  }
+
+  goNube(): any {
+    console.log('aaa');
+    this.router.navigate(["/nube"]);
   }
 
   goFs(): any {

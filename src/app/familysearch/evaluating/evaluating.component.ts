@@ -172,6 +172,9 @@ export class EvaluatingComponent implements OnInit {
 
   async add() {
     this.image = null;
+    if(this.newObject.estado !== 12){
+      this.newObject.estado = 13;
+    }
     await this.recordService.updateRecord(this.newObject._id, this.newObject);
     await this.imageService.updateImage(this.imgObj._id, { status: 2 });
     this.newObject = {};

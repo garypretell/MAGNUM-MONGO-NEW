@@ -82,12 +82,12 @@ export class ImageService {
       await client.connect();
       const database = client.db("sindex");
       const collection = database.collection("images");
-      const image = await collection.findOne(data);
-      return image;
+      const image = await collection.find(data).sort({ date: 1 }).limit(1).toArray();
+      return image[0];
     } finally {
       await client.close();
     }
-  }
+  };
 
   findImagebyId = async(_id) => {
     const client = new MongoClient(uri, {
